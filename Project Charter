@@ -1,0 +1,37 @@
+Project Charter
+
+Project Title:
+AI Hiring Bias Audit Project
+
+Goal:
+To systematically audit and mitigate gender bias in AI-driven résumé screening, using public datasets and transparent machine learning methods.
+
+Motivation:
+Automated hiring tools can unknowingly reinforce or amplify societal biases. By investigating, documenting, and mitigating these biases in a controlled and reproducible way, this project aims to raise awareness and produce practical insights for fairer hiring algorithms.
+
+Objectives & Key Outcomes:
+
+Collect and prepare well-known public datasets relevant to hiring and gender bias.
+
+Train a baseline résumé-occupation classification model.
+
+Measure and document gender bias using standard fairness metrics.
+
+Implement and compare two leading bias-mitigation strategies (Reweighing and Adversarial Debiasing).
+
+Visualize and explain the impact of bias and mitigation with interpretable metrics and plots.
+
+Deliver an optional, interactive dashboard for hands-on demo and transparency.
+
+Publish all findings, code, and data-handling choices to enable easy review and replication.
+
+Scope:
+
+Project focuses only on gender bias in résumé screening, not other hiring stages.
+
+Uses only open, non-personally-identifiable datasets.
+
+Does not use or depend on commercial API services.
+
+Ethical Commitment:
+The project is for educational and research demonstration—no commercial use. All code is open source, and sensitive data is handled with care.
