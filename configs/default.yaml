@@ -1,0 +1,7 @@
+sample_size: 30000
+random_seed: 42
+mitigation:
+  - "reweighing"
+  - "exponentiated_gradient"
+data_dir: "data"
+out_dir: "outputs"

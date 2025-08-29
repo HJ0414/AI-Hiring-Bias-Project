@@ -1,37 +1,68 @@
-# AI-Hiring-Bias-Project
-# AI Hiring Bias Audit
+# AI Bias Audit
 
-## What is this?
-A project to audit and mitigate gender bias in AI résumé screening using public datasets and machine learning, following a reproducible 20-day game plan.
+## Overview
+This project trains a simple text classifier (tech vs non‑tech profession) and audits fairness across gender. It demonstrates:
+- Data generation (synthetic BIOS-like dataset if missing)
+- Text preprocessing (cleaning + stopwords)
+- Baseline model: TF‑IDF + Logistic Regression
+- Fairness metrics by group (using Fairlearn)
+- Mitigations: Reweighing (AIF360, optional) and Exponentiated Gradient (Fairlearn)
+- Model explanations with SHAP (summary bar plot)
 
-## Main Features
-- End-to-end pipeline: download, preprocess, model, audit, debias, explain.
-- Uses TF-IDF + Logistic Regression as the baseline.
-- Measures gender bias and applies two mitigation techniques (Reweighing, Adversarial Debiasing).
-- Optional Streamlit demo app for résumé prediction and fairness disclaimer.
-
-## Try it out
-1. **Set up the environment:**
+## Setup
+```bash
 conda env create -f environment.yml
 conda activate ai-bias-audit
+```
+If SHAP complains about plotting, ensure `matplotlib` is installed (it is listed in the env or install manually):
+```bash
+conda install matplotlib -y
+```
 
-2. **Run the pipeline:**
-3. **(Optional) Launch demo:**
-4. ## Data used
-- [Bias-in-Bios](https://github.com/microsoft/biosbias)
-- [Resume Screening Bias Corpus](https://github.com/kyrawilson/Resume-Screening-Bias)
-- [SSA First Names](https://www.ssa.gov/oact/babynames/names.zip)
-- [Census Surnames](https://www2.census.gov/topics/genealogy/2010surnames/names.zip)
+## Run
+```bash
+python cli.py run
+```
+Optional config path (defaults to `configs/default.yaml`):
+```bash
+python cli.py run --cfg-path configs/default.yaml
+```
 
-## Results
-- Fairness metrics and plots in `/outputs`
-- SHAP explainability
-- Detailed plan in [Ultimate 20-Day-AI-Hiring-Bias-Audit-Project.pdf]
+## Configuration
+File: `configs/default.yaml`
+- `sample_size`: number of rows to sample from the dataset
+- `random_seed`: seed for reproducibility
+- `mitigation`: list, any of ["reweighing", "exponentiated_gradient"]
+- `data_dir`: input data directory (a synthetic `bios_bias.csv` will be created if missing)
+- `out_dir`: output directory for artefacts
+
+## Outputs
+- `outputs/baseline_metrics.csv`: by‑group metrics for the baseline
+- `outputs/rw_metrics.csv`: by‑group metrics with Reweighing (if enabled and AIF360 installed)
+- `outputs/exp_metrics.csv`: by‑group metrics with Exponentiated Gradient
+- `outputs/shap_summary.png`: SHAP summary bar plot of most important features
+
+## Project Structure
+```
+AI-Bias-Audit/
+├─ cli.py              # Entry point (Typer CLI)
+├─ audit.py            # BiasAuditor (metrics + mitigations)
+├─ model.py            # Baseline pipeline builder
+├─ explainer.py        # SHAP explanation utilities
+├─ data.py             # DatasetManager (creates synthetic data if absent)
+├─ config.py           # Config loading (pydantic)
+├─ configs/            # YAML configs (default.yaml)
+├─ data/               # Data directory (bios_bias.csv)
+├─ outputs/            # Outputs (metrics, plots)
+├─ environment.yml     # Conda environment
+├─ README.md           # This file
+└─ .gitignore
+```
+
+## Notes & Troubleshooting
+- Stopwords: the first run may auto‑download NLTK stopwords; if offline, a small built‑in set is used as fallback.
+- AIF360: if installation is difficult on macOS, you can disable `reweighing` in config. The baseline and `exponentiated_gradient` path will still work.
+- Reproducibility: the random seed is applied to sampling, dataset generation, and model (via `build_baseline(random_state=...)`).
 
 ## License
-MIT
-
-## Limitations
-Current data is binary gender only due to public dataset constraints. See [plan] for details/future work.
-
-
+See `LICENSE`.
